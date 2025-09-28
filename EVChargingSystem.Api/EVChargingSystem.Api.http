@@ -1,0 +1,6 @@
+@EVChargingSystem.Api_HostAddress = http://localhost:5146
+
+GET {{EVChargingSystem.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

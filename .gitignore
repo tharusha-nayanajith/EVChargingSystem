@@ -1,0 +1,36 @@
+## .NET ##
+**/[Bb]in/
+**/[Oo]bj/
+**/[Ll]og/
+**/[Ll]ogs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.nupkg
+*.nuspec
+packages/
+
+## VS Code ##
+.vscode/
+
+## Visual Studio ##
+.vs/
+_ReSharper.*/
+*.rsuser
+*.csproj.user
+
+## Rider ##
+.idea/
+
+## MongoDB ##
+data/
+mongod.log
+
+## OS ##
+.DS_Store
+Thumbs.db
+
+## Project Specific ##
+appsettings.Development.json
+*.db

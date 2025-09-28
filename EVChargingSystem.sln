@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36518.9 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVChargingSystem.Api", "EVChargingSystem.Api\EVChargingSystem.Api.csproj", "{013FCB9F-265A-46A9-B739-4E045E6B7D2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVChargingSystem.Application", "EVChargingSystem.Application\EVChargingSystem.Application.csproj", "{B0C7BACF-A317-4447-901E-34909DAE0093}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVChargingSystem.Domain", "EVChargingSystem.Domain\EVChargingSystem.Domain.csproj", "{9969A977-71E4-41A6-8FDC-C55ECD385324}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVChargingSystem.Infrastructure", "EVChargingSystem.Infrastructure\EVChargingSystem.Infrastructure.csproj", "{8E3DDA7B-19AF-49EA-A945-8F7C33550369}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVChargingSystem.Tests", "EVChargingSystem.Tests\EVChargingSystem.Tests.csproj", "{B8693701-0CC1-4D03-9EBD-AA6916CD75AD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{013FCB9F-265A-46A9-B739-4E045E6B7D2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{013FCB9F-265A-46A9-B739-4E045E6B7D2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{013FCB9F-265A-46A9-B739-4E045E6B7D2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{013FCB9F-265A-46A9-B739-4E045E6B7D2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0C7BACF-A317-4447-901E-34909DAE0093}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0C7BACF-A317-4447-901E-34909DAE0093}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0C7BACF-A317-4447-901E-34909DAE0093}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0C7BACF-A317-4447-901E-34909DAE0093}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9969A977-71E4-41A6-8FDC-C55ECD385324}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9969A977-71E4-41A6-8FDC-C55ECD385324}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9969A977-71E4-41A6-8FDC-C55ECD385324}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9969A977-71E4-41A6-8FDC-C55ECD385324}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E3DDA7B-19AF-49EA-A945-8F7C33550369}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E3DDA7B-19AF-49EA-A945-8F7C33550369}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E3DDA7B-19AF-49EA-A945-8F7C33550369}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E3DDA7B-19AF-49EA-A945-8F7C33550369}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8693701-0CC1-4D03-9EBD-AA6916CD75AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8693701-0CC1-4D03-9EBD-AA6916CD75AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8693701-0CC1-4D03-9EBD-AA6916CD75AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8693701-0CC1-4D03-9EBD-AA6916CD75AD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9135407D-742D-4348-9F60-4A234EAE0093}
+	EndGlobalSection
+EndGlobal
