@@ -1,0 +1,15 @@
+# .gitignore
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.cache
+*.log
+.env
+.env.*
+wwwroot/
+packages/
+.nuget/
+*.nupkg
+TestResults/

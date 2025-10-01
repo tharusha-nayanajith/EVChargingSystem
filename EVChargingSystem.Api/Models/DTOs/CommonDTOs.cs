@@ -1,0 +1,40 @@
+﻿// ========================================
+// Models/DTOs/CommonDTOs.cs
+// ========================================
+/*
+ * CommonDTOs.cs
+ * Common Data Transfer Objects
+ * Date: September 2025
+ * Description: Contains common DTOs used across the application
+ */
+
+namespace EVChargingSystem.Api.Models.DTOs
+{
+   
+    public class ApiResponseDTO<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = string.Empty;
+        public T? Data { get; set; }
+        public List<string> Errors { get; set; } = new();
+    }
+
+    public class PaginatedResponseDTO<T>
+    {
+        public List<T> Items { get; set; } = new();
+        public int TotalCount { get; set; }
+        public int PageNumber { get; set; }
+        public int PageSize { get; set; }
+        public int TotalPages { get; set; }
+        public bool HasPreviousPage { get; set; }
+        public bool HasNextPage { get; set; }
+    }
+
+    //public class DashboardStatsDTO
+    //{
+    //    public int PendingReservations { get; set; }
+    //    public int ApprovedFutureReservations { get; set; }
+    //    public int TotalActiveStations { get; set; }
+    //    //public List<ChargingStation> NearbyStations { get; set; } = new();
+    //}
+}
