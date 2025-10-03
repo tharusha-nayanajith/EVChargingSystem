@@ -17,7 +17,7 @@ namespace EVChargingSystem.Api.Models
         [BsonElement("userId")]
         public string UserId { get; set; } = string.Empty;
 
-        //[BsonElement("userType")]
+        [BsonElement("userType")]
         public string UserType { get; set; } = string.Empty;
 
         [BsonElement("refreshToken")]

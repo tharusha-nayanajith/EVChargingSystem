@@ -15,11 +15,11 @@ using MongoDB.Driver;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+
 namespace EVChargingSystem.Api.Services
 {
     public class AuthService : IAuthService
     {
-        //private readonly IMongoCollection<User> _users;
         private readonly IMongoCollection<EVOwner> _evOwners;
         private readonly IMongoCollection<Session> _sessions;
         private readonly IConfiguration _configuration;
@@ -30,12 +30,10 @@ namespace EVChargingSystem.Api.Services
         public AuthService(IMongoClient mongoClient, IConfiguration configuration)
         {
             var database = mongoClient.GetDatabase("EVChargingStationDB");
-            //_users = database.GetCollection<User>("Users");
             _sessions = database.GetCollection<Session>("Sessions");
             _evOwners = database.GetCollection<EVOwner>("EVOwners");
             _configuration = configuration;
         }
-
 
         /// <summary>
         /// Authenticates EV owners using NIC and password
@@ -59,7 +57,7 @@ namespace EVChargingSystem.Api.Services
                 var update = Builders<EVOwner>.Update.Set(e => e.LastLogin, DateTime.UtcNow);
                 await _evOwners.UpdateOneAsync(e => e.Id == evOwner.Id, update);
 
-                var accessToken = GenerateJwtToken(evOwner.Id, "EVOwner");
+                var accessToken = GenerateJwtToken(evOwner.Id, "EVOwner", "EVOwner", evOwner.NIC);
                 var refreshToken = Guid.NewGuid().ToString();
                 var accessTokenExpiry = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JWT:ExpirationMinutes"]));
                 var refreshTokenExpiry = DateTime.UtcNow.AddDays(int.Parse(_configuration["JWT:ExpirationDays"]));
@@ -119,30 +117,26 @@ namespace EVChargingSystem.Api.Services
                         Message = "Invalid or expired refresh token"
                     };
                 }
-                //  Add the EV Owner type check here
-                if (session.UserType != "EVOwner")
+
+                string role;
+                string newAccessToken = string.Empty;
+                if (session.UserType == "EVOwner")
                 {
-                    return new ApiResponseDTO<AuthResponseDTO>
+                    var evOwner = await _evOwners.Find(e => e.Id == session.UserId).FirstOrDefaultAsync();
+                    if (evOwner == null || !evOwner.IsActive)
                     {
-                        Success = false,
-                        Message = "Only EV Owners can refresh tokens"
-                    };
+                        await _sessions.UpdateOneAsync(s => s.Id == session.Id,
+                            Builders<Session>.Update.Set(s => s.IsActive, false));
+                        return new ApiResponseDTO<AuthResponseDTO>
+                        {
+                            Success = false,
+                            Message = "EV Owner not found or inactive"
+                        };
+                    }
+                    role = "EVOwner";
+                    newAccessToken = GenerateJwtToken(session.UserId, session.UserType, role, evOwner.NIC);
                 }
 
-                // Only allow EV Owner
-                var evOwner = await _evOwners.Find(e => e.Id == session.UserId).FirstOrDefaultAsync();
-                if (evOwner == null || !evOwner.IsActive)
-                {
-                    await _sessions.UpdateOneAsync(s => s.Id == session.Id,
-                        Builders<Session>.Update.Set(s => s.IsActive, false));
-                    return new ApiResponseDTO<AuthResponseDTO>
-                    {
-                        Success = false,
-                        Message = "EV Owner not found or inactive"
-                    };
-                }
-
-                var newAccessToken = GenerateJwtToken(session.UserId, session.UserType);
                 var newRefreshToken = Guid.NewGuid().ToString();
                 var accessTokenExpiry = DateTime.UtcNow.AddMinutes(int.Parse(_configuration["JWT:ExpirationMinutes"]));
                 var refreshTokenExpiry = DateTime.UtcNow.AddDays(int.Parse(_configuration["JWT:ExpirationDays"]));
@@ -178,7 +172,6 @@ namespace EVChargingSystem.Api.Services
                 };
             }
         }
-
 
         /// <summary>
         /// Logs out user by invalidating the refresh token
@@ -219,19 +212,25 @@ namespace EVChargingSystem.Api.Services
         /// <summary>
         /// Generates JWT token for authenticated users
         /// </summary>
-        public string GenerateJwtToken(string userId, string userType /*string role*/)
+        public string GenerateJwtToken(string userId, string userType, string role, string? nic = null)
         {
             var jwtSettings = _configuration.GetSection("JWT");
             var secretKey = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]);
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, userId),
-                //new Claim(ClaimTypes.Role, role),
-                new Claim("UserType", userType),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
+                new(ClaimTypes.NameIdentifier, userId),
+                new(ClaimTypes.Role, role),
+                new("UserType", userType),
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
             };
+
+            // Add NIC claim only if provided
+            if (!string.IsNullOrEmpty(nic))
+            {
+                claims.Add(new Claim("NIC", nic));
+            }
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
