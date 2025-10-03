@@ -435,7 +435,7 @@ namespace EVChargingSystem.Api.Services
         /// <summary>
         /// Gets dashboard statistics for an EV owner
         /// </summary>
-        //public async Task<ApiResponseDTO<DashboardStatsDTO>> GetEVOwnerDashboardStatsAsync(string evOwnerNIC)
+        //public async Task<ApiResponseDTO<DashboardStatsDTO>> GetEVOwnerDashboardStatsAsync(string evOwnerNIC, NearbyStationsRequestDTO? locationRequest = null)
         //{
         //    try
         //    {
@@ -449,6 +449,39 @@ namespace EVChargingSystem.Api.Services
 
         //        var totalActiveStations = await _chargingStations.CountDocumentsAsync(s => s.IsActive);
 
+        //        // Get nearby stations if location is provided
+        //        List<ChargingStation> nearbyStations = [];
+
+        //        if (locationRequest != null)
+        //        {
+        //            // Get all active stations
+        //            var allStations = await _chargingStations.Find(s => s.IsActive).ToListAsync();
+
+        //            // Calculate distance for each station and filter by radius
+        //            foreach (var station in allStations)
+        //            {
+        //                var distance = CalculateDistance(locationRequest.Latitude, locationRequest.Longitude,
+        //                                               station.Location.Latitude, station.Location.Longitude);
+
+        //                if (distance <= locationRequest.RadiusKm)
+        //                {
+        //                    nearbyStations.Add(station);
+        //                }
+        //            }
+
+        //            // Sort by distance (closest first) and limit to 10
+        //            nearbyStations = nearbyStations
+        //                .OrderBy(s => CalculateDistance(locationRequest.Latitude, locationRequest.Longitude,
+        //                                              s.Location.Latitude, s.Location.Longitude))
+        //                .Take(10)
+        //                .ToList();
+        //        }
+        //        else
+        //        {
+        //            // If no location provided, return first 10 active stations
+        //            nearbyStations = await _chargingStations.Find(s => s.IsActive).Limit(10).ToListAsync();
+        //        }
+
         //        return new ApiResponseDTO<DashboardStatsDTO>
         //        {
         //            Success = true,
@@ -457,7 +490,8 @@ namespace EVChargingSystem.Api.Services
         //            {
         //                PendingReservations = (int)pendingReservations,
         //                ApprovedFutureReservations = (int)approvedFutureReservations,
-        //                TotalActiveStations = (int)totalActiveStations
+        //                TotalActiveStations = (int)totalActiveStations,
+        //                NearbyStations = nearbyStations
         //            }
         //        };
         //    }
@@ -470,5 +504,32 @@ namespace EVChargingSystem.Api.Services
         //        };
         //    }
         //}
+
+        /// <summary>
+        /// Calculates distance between two geographic points using Haversine formula
+        /// </summary>
+        private static double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
+        {
+            const double R = 6371; // Earth's radius in kilometers
+
+            var dLat = ToRadians(lat2 - lat1);
+            var dLon = ToRadians(lon2 - lon1);
+
+            var a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                    Math.Cos(ToRadians(lat1)) * Math.Cos(ToRadians(lat2)) *
+                    Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+
+            var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+
+            return R * c;
+        }
+
+        /// <summary>
+        /// Converts degrees to radians
+        /// </summary>
+        private static double ToRadians(double degrees)
+        {
+            return degrees * (Math.PI / 180);
+        }
     }
 }
